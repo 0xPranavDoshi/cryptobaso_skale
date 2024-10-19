@@ -10,7 +10,9 @@ export default function Home() {
       <Navbar />
 
       <MainContent />
+      <hr className="w-full border-white/[.1]" />
       <Features />
+      <hr className="w-full border-white/[.1]" />
     </div>
   );
 }

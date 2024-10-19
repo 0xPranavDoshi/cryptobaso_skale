@@ -25,3 +25,12 @@ body {
     text-wrap: balance;
   }
 }
+
+@keyframes animate-navbar {
+  0% {
+    background-color: transparent;
+  }
+  100% {
+    background-color: rgb(25, 27, 28);
+  }
+}

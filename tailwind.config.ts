@@ -8,6 +8,9 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      animation: {
+        "animate-navbar": "animate-navbar 0.3s ease-in-out",
+      },
       fontFamily: {
         robotoMono: ["var(--font-roboto-mono)"],
         inriaSans: ["var(--font-inria-sans)"],
