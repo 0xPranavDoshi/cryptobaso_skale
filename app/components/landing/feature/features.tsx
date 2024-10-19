@@ -4,9 +4,7 @@ const Features = () => {
   return (
     <div className="w-full h-screen flex pt-[100vh-16px] items-start justify-center">
       <div className="mt-[80px] w-3/4 flex flex-col">
-        <h1 className="my-12 text-5xl font-light font-robotoMono text-white">
-          Features
-        </h1>
+        <h1 className="my-12 text-4xl font-robotoMono text-white">Features</h1>
         <div className="flex flex-wrap gap-8">
           <Feature
             title="Smart Contracts"
