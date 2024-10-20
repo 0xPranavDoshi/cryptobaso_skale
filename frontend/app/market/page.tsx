@@ -6,7 +6,7 @@ import Navbar from "../components/navbar";
 import { CoinType } from "../models/coin";
 
 const Markets = () => {
-  const COIN_SYMBOLS = ["SKL", "ETH", "USDT"];
+  const COIN_SYMBOLS = ["SKL", "ETH", "USDT", "MATIC"];
 
   const [coins, setCoins] = useState<CoinType[]>([]);
 
@@ -52,14 +52,34 @@ const Markets = () => {
               ? "tether"
               : symbol === "ETH"
               ? "ethereum"
+              : symbol === "MATIC"
+              ? "polygon"
               : "skale",
           name:
             symbol === "USDT"
               ? "Tether"
               : symbol === "ETH"
               ? "Ethereum"
+              : symbol === "MATIC"
+              ? "Polygon"
               : "Skale",
           price: data_price.rate,
+          network:
+            symbol === "MATIC"
+              ? {
+                  name: "Polygon Amoy Testnet",
+                  chainId: "0x80002",
+                  rpcUrl: "https://rpc-amoy.polygon.technology/",
+                  explorerUrl: "https://www.oklink.com/amoy",
+                }
+              : {
+                  name: "Europa DeFi & Liquidity Hub",
+                  chainId: "0x561bf78b",
+                  rpcUrl:
+                    "https://testnet.skalenodes.com/v1/juicy-low-small-testnet",
+                  explorerUrl:
+                    "https://juicy-low-small-testnet.explorer.testnet.skalenodes.com",
+                },
           change: (data_change[0].rate_close - data_change[1].rate_close)
             .toFixed(5)
             .toString(),
@@ -99,10 +119,13 @@ const Markets = () => {
                   Name
                 </th>
                 <th className="text-left font-inriaSans text-light font-light">
+                  Network
+                </th>
+                <th className="text-left font-inriaSans text-light font-light">
                   Price
                 </th>
                 <th className="text-left font-inriaSans text-light font-light">
-                  Change
+                  24h Change
                 </th>
                 <th className="text-left font-inriaSans text-light font-light">
                   Percentage Change

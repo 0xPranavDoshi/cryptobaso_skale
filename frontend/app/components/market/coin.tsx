@@ -21,6 +21,7 @@ const Coin = (coin: CoinType) => {
           <span>{coin.name}</span>
         </div>
       </td>
+      <td className="text-white text-lg font-inriaSans">{coin.network.name}</td>
       <td className="text-white text-lg font-inriaSans">
         ${coin.price.toFixed(2)}
       </td>

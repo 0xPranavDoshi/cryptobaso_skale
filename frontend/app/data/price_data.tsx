@@ -221,4 +221,5 @@ export const CoinPrices = {
   ETH: EthPrices,
   SKL: SKLPrices,
   USDT: USDTPrices,
+  MATIC: [],
 };

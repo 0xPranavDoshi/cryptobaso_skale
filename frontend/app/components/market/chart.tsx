@@ -23,6 +23,8 @@ const CoinChart = ({ coin }: { coin: CoinType }) => {
         return 0.001;
       case "ETH":
         return 50;
+      case "MATIC":
+        return 0.2;
       default:
         return 1;
     }

@@ -116,21 +116,22 @@ const Navbar = () => {
           >
             Markets
           </Link>
-          <Link
+          {/* <Link
             className={`${
               pathname === "/portfolio" ? "text-white" : "text-light"
             } hover:text-white transition-colors font-robotoMono no-underline`}
             href="/portfolio"
           >
             Portfolio
-          </Link>
+          </Link> */}
           <Link
             className={`${
-              pathname === "/about" ? "text-white" : "text-light"
+              pathname === "/docs" ? "text-white" : "text-light"
             } hover:text-white transition-colors font-robotoMono no-underline`}
-            href="/about"
+            href="https://github.com/cryptobaso/cryptobaso_skale"
+            target="_blank"
           >
-            About Us
+            Documentation
           </Link>
         </div>
         {!accountData ? (

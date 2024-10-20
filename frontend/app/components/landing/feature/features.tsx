@@ -7,26 +7,29 @@ const Features = () => {
         <h1 className="my-12 text-4xl font-robotoMono text-white">Features</h1>
         <div className="flex flex-wrap gap-8">
           <Feature
-            title="Smart Contracts"
-            description="Keeps ur funds secure. Also trustless"
+            title="Zero Gas Fees"
+            description="Execute transactions without paying any gas fees, making trading more cost-effective."
           />
           <Feature
-            title="Decentralized"
-            description="No need to trust us. We are just a platform"
+            title="Microtransactions"
+            description="Better market condition checks and trade execution, minimizing the risk of price fluctuations and ensuring greater control."
           />
           <Feature
-            title="Transparent"
-            description="All transactions are transparent and immutable"
+            title="Decentralized Limit Orders"
+            description="Buy and sell orders executed automatically using smart contracts when conditions are met, without relying on centralized exchanges."
           />
           <Feature
             title="Secure"
-            description="Keeps ur funds secure. Also trustless"
+            description="Protects your assets and transactions and ensures a safe trading environment."
           />
           <Feature
-            title="Low Fees"
-            description="Low fees for the transactions"
+            title="Easy to use"
+            description="User-friendly interface and intuitive design for seamless trading experience, suitable for both beginners and experienced traders."
           />
-          <Feature title="Easy to use" description="Simple and easy to use" />
+          <Feature
+            title="Real-Time Market Analytics"
+            description="Access comprehensive, up-to-the-minute market data and insights to make informed trading decisions."
+          />
         </div>
       </div>
     </div>

@@ -782,60 +782,60 @@ const TradeCard = ({ coin }: { coin: CoinType }) => {
         // For example: const tx = await signer.sendTransaction({...});
 
         // Check if the wallet is connected to Europa DeFi Hub SKALE network
-        // const chainId = await window.ethereum.request({
-        //   method: "eth_chainId",
-        // });
-        // const europaDeFiHubChainId = "0x561bf78b"; // Chain ID for Europa DeFi Hub
+        const chainId = await window.ethereum.request({
+          method: "eth_chainId",
+        });
+        const europaDeFiHubChainId = "0x561bf78b"; // Chain ID for Europa DeFi Hub
 
-        // if (chainId !== europaDeFiHubChainId) {
-        //   try {
-        //     // Request to switch to Europa DeFi Hub network
-        //     await window.ethereum.request({
-        //       method: "wallet_switchEthereumChain",
-        //       params: [{ chainId: europaDeFiHubChainId }],
-        //     });
-        //     console.log("Switched to Europa DeFi Hub network successfully");
-        //   } catch (switchError: any) {
-        //     // This error code indicates that the chain has not been added to MetaMask
-        //     if (switchError.code === 4902) {
-        //       try {
-        //         await window.ethereum.request({
-        //           method: "wallet_addEthereumChain",
-        //           params: [
-        //             {
-        //               chainId: europaDeFiHubChainId,
-        //               chainName: "Europa DeFi & Liquidity Hub",
-        //               nativeCurrency: {
-        //                 name: "sFUEL",
-        //                 symbol: "sFUEL",
-        //                 decimals: 18,
-        //               },
-        //               rpcUrls: [
-        //                 "https://testnet.skalenodes.com/v1/juicy-low-small-testnet",
-        //               ],
-        //               blockExplorerUrls: [
-        //                 "https://juicy-low-small-testnet.explorer.testnet.skalenodes.com",
-        //               ],
-        //             },
-        //           ],
-        //         });
-        //         console.log("Europa DeFi Hub network added successfully");
-        //       } catch (addError) {
-        //         console.error(
-        //           "Failed to add Europa DeFi Hub network:",
-        //           addError
-        //         );
-        //       }
-        //     } else {
-        //       console.error(
-        //         "Failed to switch to Europa DeFi Hub network:",
-        //         switchError
-        //       );
-        //     }
-        //   }
-        // } else {
-        //   console.log("Already connected to Europa DeFi Hub network");
-        // }
+        if (chainId !== europaDeFiHubChainId) {
+          try {
+            // Request to switch to Europa DeFi Hub network
+            await window.ethereum.request({
+              method: "wallet_switchEthereumChain",
+              params: [{ chainId: europaDeFiHubChainId }],
+            });
+            console.log("Switched to Europa DeFi Hub network successfully");
+          } catch (switchError: any) {
+            // This error code indicates that the chain has not been added to MetaMask
+            if (switchError.code === 4902) {
+              try {
+                await window.ethereum.request({
+                  method: "wallet_addEthereumChain",
+                  params: [
+                    {
+                      chainId: europaDeFiHubChainId,
+                      chainName: "Europa DeFi & Liquidity Hub",
+                      nativeCurrency: {
+                        name: "sFUEL",
+                        symbol: "sFUEL",
+                        decimals: 18,
+                      },
+                      rpcUrls: [
+                        "https://testnet.skalenodes.com/v1/juicy-low-small-testnet",
+                      ],
+                      blockExplorerUrls: [
+                        "https://juicy-low-small-testnet.explorer.testnet.skalenodes.com",
+                      ],
+                    },
+                  ],
+                });
+                console.log("Europa DeFi Hub network added successfully");
+              } catch (addError) {
+                console.error(
+                  "Failed to add Europa DeFi Hub network:",
+                  addError
+                );
+              }
+            } else {
+              console.error(
+                "Failed to switch to Europa DeFi Hub network:",
+                switchError
+              );
+            }
+          }
+        } else {
+          console.log("Already connected to Europa DeFi Hub network");
+        }
 
         // TODO: Implement the transfer funds logic
         // Transfer funds to smart contract address

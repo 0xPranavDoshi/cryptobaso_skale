@@ -7,6 +7,12 @@ export const USDC: CoinType = {
   price: 0,
   change: "0",
   percentageChange: "0",
+  network: {
+    name: "Ethereum",
+    chainId: 1,
+    rpcUrl: "",
+    explorerUrl: "",
+  },
 };
 
 export const ETH: CoinType = {

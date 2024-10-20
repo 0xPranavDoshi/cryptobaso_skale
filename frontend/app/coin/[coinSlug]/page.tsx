@@ -28,6 +28,8 @@ const CoinPage = ({ params }: { params: { coinSlug: string } }) => {
           return "ETH";
         case "skale":
           return "SKL";
+        case "polygon":
+          return "MATIC";
         default:
           return "";
       }
@@ -49,7 +51,13 @@ const CoinPage = ({ params }: { params: { coinSlug: string } }) => {
       symbol: symbol,
       slug: params.coinSlug,
       name:
-        symbol === "USDT" ? "Tether" : symbol === "ETH" ? "Ethereum" : "Skale",
+        symbol === "USDT"
+          ? "Tether"
+          : symbol === "ETH"
+          ? "Ethereum"
+          : symbol === "MATIC"
+          ? "Polygon"
+          : "Skale",
       price: data_price.rate,
       change: "",
       percentageChange: "",

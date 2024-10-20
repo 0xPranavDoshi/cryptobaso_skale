@@ -5,4 +5,10 @@ export interface CoinType {
   price: number;
   change: string;
   percentageChange: string;
+  network: {
+    name: string;
+    chainId: string;
+    rpcUrl: string;
+    explorerUrl: string;
+  };
 }
