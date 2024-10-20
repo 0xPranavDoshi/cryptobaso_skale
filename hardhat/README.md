@@ -6,3 +6,5 @@ Create a .env file and copy the line below, replacing `<private-key>` with your 
 To run deploy the contracts and server, change your directory to the hardhat folder. If you want to deploy on local hardhat node, run `npx harhat node` and then `npx hardhat run scripts/server.js --network localhost`
 
 If you want to deploy on SKALE network, run `npx hardhat run scripts/server.js --network skale`
+
+When redeploying the script, you will probably want to delete the hardhat/ignition/deplyoments folder because hardhat keeps track of previously deployed contracts, meaning you aren't actually redploying anything when you run it again.
