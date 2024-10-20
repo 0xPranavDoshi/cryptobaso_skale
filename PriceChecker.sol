@@ -2,10 +2,11 @@
 pragma solidity ^0.8;
 pragma abicoder v2;
 
-
+import 'https://github.com/cryptobaso/cryptobaso_skale/blob/main/dex.sol';
+import '@uniswap/v3-periphery/contracts/libraries/TransferHelper.sol';
 
 contract PriceChecker {
-    Dex public immutable swapRouter;
+    dex public immutable swapRouter;
     uint public immutable split;
     uint256 public amountIn;
     uint256 public desiredOutput;
@@ -15,7 +16,7 @@ contract PriceChecker {
     address public constant TOKEN2 = 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2; // WETH token address
     uint24 public constant poolFee = 3000; // Example: 0.3% fee pool
 
-    constructor(Dex _swapRouter, uint256 _split, uint256 _amountIn, uint256 _desiredOutput) {
+    constructor(dex _swapRouter, uint256 _split, uint256 _amountIn, uint256 _desiredOutput) {
         totalIn = _amountIn;
         amountIn = _amountIn;
         desiredOutput = _desiredOutput;
@@ -34,14 +35,9 @@ contract PriceChecker {
         address tokenIn, 
         address tokenOut
     ) external returns (bool canSwap) {
-        
-        // Build the quote params
-        ExactInputSingleParams memory params =ExactInputSingleParams({
-                 // No price limits, using pool's current rate
-            });
 
         // Call the `quoteExactInputSingle` method to estimate the output for the given amountIn
-        uint256 estimatedOutput = swapRouter.exactInputSingle(tokenIn, tokenOut, poolFee, address(this), amountIn, 0, 0);
+        uint256 estimatedOutput = swapRouter.getPrice(tokenIn, tokenOut, poolFee, address(this), amountIn, 0, 0);
 
         // Compare the estimated output with the desired output
         if (estimatedOutput >= desiredOutput) {
@@ -64,7 +60,7 @@ contract PriceChecker {
         TransferHelper.safeApprove(TOKEN2, address(swapRouter), amountIn);
 
         // Executes the swap returning the amountIn needed to spend to receive the desired amountOut.
-        amountPayed = swapRouter.exactOutputSingle(TOKEN1, TOKEN2, poolFee, msg.sender, desiredOutput, amountIn, 0);
+        amountPayed = swapRouter.swapToken(TOKEN1, TOKEN2, poolFee, msg.sender, desiredOutput, amountIn, 0);
 
         // For exact output swaps, the amountInMaximum may not have all been spent.
         if (amountPayed < amountIn) {
