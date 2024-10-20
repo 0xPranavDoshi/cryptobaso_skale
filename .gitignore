@@ -3,7 +3,8 @@
 frontend/node_modules
 frontend/.env
 frontend/.env.local
-frontend/.next
+frontend/.next/
+frontend/out/
 
 # dependencies
 /node_modules
