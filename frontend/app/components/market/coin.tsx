@@ -1,0 +1,45 @@
+"use client";
+
+import { PrimaryButton } from "@/app/ui/button";
+import Image from "next/image";
+import { CoinType } from "@/app/models/coin";
+import { useRouter } from "next/navigation";
+
+const Coin = ({ name, price, change, percentageChange, slug }: CoinType) => {
+  const router = useRouter();
+
+  return (
+    <tr className="border-b border-light/[.30]">
+      <td className="text-white text-lg font-inriaSans">
+        <div className="flex items-center gap-4">
+          <Image src={`/coins/${slug}.png`} alt={name} width={32} height={32} />
+          <span>{name}</span>
+        </div>
+      </td>
+      <td className="text-white text-lg font-inriaSans">${price}</td>
+      <td
+        className={`text-lg font-inriaSans ${
+          change.startsWith("-") ? "text-red-400" : "text-emerald-400"
+        }`}
+      >
+        {change}
+      </td>
+      <td
+        className={`text-lg font-inriaSans ${
+          percentageChange.startsWith("-") ? "text-red-400" : "text-emerald-400"
+        }`}
+      >
+        {percentageChange}
+      </td>
+      <td className="py-4 text-right">
+        <PrimaryButton
+          small
+          text="View Details"
+          onClick={() => router.push(`/coin/${slug}`)}
+        />
+      </td>
+    </tr>
+  );
+};
+
+export default Coin;
