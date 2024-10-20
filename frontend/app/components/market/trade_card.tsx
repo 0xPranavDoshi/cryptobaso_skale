@@ -6,7 +6,16 @@ import { ethers } from "ethers";
 import { CoinType } from "@/app/models/coin";
 
 const ERC20_ABI = [
-  "function approve(address spender, uint256 amount) external returns (bool)",
+  // Read-Only Functions
+  "function balanceOf(address owner) view returns (uint256)",
+  "function decimals() view returns (uint8)",
+  "function symbol() view returns (string)",
+
+  // Authenticated Functions
+  "function transfer(address to, uint amount) returns (bool)",
+
+  // Events
+  "event Transfer(address indexed from, address indexed to, uint amount)",
 ];
 
 const TradeCard = ({ coin }: { coin: CoinType }) => {
@@ -14,12 +23,12 @@ const TradeCard = ({ coin }: { coin: CoinType }) => {
   const [amount, setAmount] = useState<number>(0);
   const [splits, setSplits] = useState<number>(1);
 
-  const swapTokens = async ({
+  const transferFunds = async ({
     amount,
     coin,
   }: {
     amount: number;
-    coin: string;
+    coin: CoinType;
   }) => {
     try {
       // Check if window.ethereum is available
@@ -43,112 +52,90 @@ const TradeCard = ({ coin }: { coin: CoinType }) => {
         // You can now use the signer for transactions
         // For example: const tx = await signer.sendTransaction({...});
 
-        // Check if the wallet is connected to the Polygon Amoy Testnet
+        // Check if the wallet is connected to Europa DeFi Hub SKALE network
         const chainId = await window.ethereum.request({
           method: "eth_chainId",
         });
+        const europaDeFiHubChainId = "0x561bf78b"; // Chain ID for Europa DeFi Hub
 
-        console.log("chainId", chainId);
-        const amoyTestnetChainId = "0x13882"; // Chain ID for Polygon Amoy Testnet
-
-        if (chainId !== amoyTestnetChainId) {
+        if (chainId !== europaDeFiHubChainId) {
           try {
-            // Request network switch to Polygon Amoy Testnet
+            // Request to switch to Europa DeFi Hub network
             await window.ethereum.request({
               method: "wallet_switchEthereumChain",
-              params: [{ chainId: amoyTestnetChainId }],
+              params: [{ chainId: europaDeFiHubChainId }],
             });
+            console.log("Switched to Europa DeFi Hub network successfully");
           } catch (switchError: any) {
             // This error code indicates that the chain has not been added to MetaMask
             if (switchError.code === 4902) {
               try {
-                // Add the Polygon Amoy Testnet to the wallet
                 await window.ethereum.request({
                   method: "wallet_addEthereumChain",
                   params: [
                     {
-                      chainId: amoyTestnetChainId,
-                      chainName: "Polygon Amoy Testnet",
+                      chainId: europaDeFiHubChainId,
+                      chainName: "Europa DeFi & Liquidity Hub",
                       nativeCurrency: {
-                        name: "MATIC",
-                        symbol: "MATIC",
+                        name: "sFUEL",
+                        symbol: "sFUEL",
                         decimals: 18,
                       },
-                      rpcUrls: ["https://rpc-amoy.polygon.technology/"],
-                      blockExplorerUrls: ["https://www.oklink.com/amoy"],
+                      rpcUrls: [
+                        "https://testnet.skalenodes.com/v1/juicy-low-small-testnet",
+                      ],
+                      blockExplorerUrls: [
+                        "https://juicy-low-small-testnet.explorer.testnet.skalenodes.com",
+                      ],
                     },
                   ],
                 });
+                console.log("Europa DeFi Hub network added successfully");
               } catch (addError) {
-                console.error("Error adding Polygon Amoy Testnet:", addError);
-                return null;
+                console.error(
+                  "Failed to add Europa DeFi Hub network:",
+                  addError
+                );
               }
             } else {
               console.error(
-                "Error switching to Polygon Amoy Testnet:",
+                "Failed to switch to Europa DeFi Hub network:",
                 switchError
               );
-              return null;
             }
           }
+        } else {
+          console.log("Already connected to Europa DeFi Hub network");
         }
 
-        console.log("Connected to Polygon Amoy Testnet");
+        // TODO: Implement the transfer funds logic
+        // Transfer funds to smart contract address
+        const smartContractAddress =
+          "0xDfCcc9567378aBa81B74ece63ba9bAD017bAF65d";
 
-        // Get the contract addresses of the two tokens
-        const wethAddress = "0xA6FA4fB5f76172d178d61B04b0ecd319C5d1C0aa";
-        const usdcAddress = "0x9999f7Fea5938fD3b1E26A12c3f2fb024e194f97";
-
-        console.log("WETH contract address:", wethAddress);
-        console.log("USDC contract address:", usdcAddress);
-
-        // Create instances of the token contracts
-        const wethContract = new ethers.Contract(
-          wethAddress,
-          ERC20_ABI,
-          signer
-        );
+        // Create a contract instance for USDC
+        const usdcContractAddress =
+          "0x6CE77Fc7970F6984eF3E8748A3826972Ec409Fb9";
         const usdcContract = new ethers.Contract(
-          usdcAddress,
+          usdcContractAddress,
           ERC20_ABI,
           signer
         );
 
-        // Get the current exchange rate (this is a simplified example)
-        const exchangeRate = 1800; // 1 ETH = 1800 USDC
+        const amountInUsdc = (amount * coin.price).toFixed(6);
 
-        const amount = 5;
+        console.log("amountInUsdc", amountInUsdc);
 
-        // Calculate the amount of USDC to receive
-        const usdcAmount = ethers.utils.parseUnits(
-          (amount * exchangeRate).toString(),
-          6
-        ); // USDC has 6 decimal places
+        const amountInWei = ethers.utils.parseUnits(amountInUsdc.toString(), 6);
 
-        // Approve the WETH contract to spend tokens
-        const approveTx = await wethContract.approve(
-          usdcAddress,
-          ethers.utils.parseEther(amount.toString())
-        );
-        await approveTx.wait();
-
-        // Perform the swap
-        const swapTx = await usdcContract.swapExactTokensForTokens(
-          ethers.utils.parseEther(amount.toString()),
-          usdcAmount,
-          [wethAddress, usdcAddress],
-          signer.getAddress(),
-          Math.floor(Date.now() / 1000) + 60 * 20 // 20 minutes from now
+        const tx = await usdcContract.transfer(
+          smartContractAddress,
+          amountInWei
         );
 
-        await swapTx.wait();
+        await tx.wait();
 
-        console.log(
-          `Swapped ${amount} ETH for ${ethers.utils.formatUnits(
-            usdcAmount,
-            6
-          )} USDC`
-        );
+        console.log("Transfer successful:", tx.hash);
       } else {
         console.error("Please install MetaMask!");
         return null;
@@ -226,7 +213,7 @@ const TradeCard = ({ coin }: { coin: CoinType }) => {
 
         <SecondaryButton
           text="Trade"
-          onClick={() => swapTokens({ amount, coin: coin.slug })}
+          onClick={() => transferFunds({ amount, coin })}
           fullWidth
         />
       </div>
