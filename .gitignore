@@ -6,6 +6,13 @@ frontend/.env.local
 frontend/.next/
 frontend/out/
 
+polygon_swap/node_modules
+polygon_swap/.env
+polygon_swap/.env.local
+polygon_swap/.next/
+polygon_swap/out/
+polygon_swap/.gitignore
+
 # dependencies
 /node_modules
 /.pnp

@@ -5,37 +5,46 @@ import Image from "next/image";
 import { CoinType } from "@/app/models/coin";
 import { useRouter } from "next/navigation";
 
-const Coin = ({ name, price, change, percentageChange, slug }: CoinType) => {
+const Coin = (coin: CoinType) => {
   const router = useRouter();
 
   return (
     <tr className="border-b border-light/[.30]">
       <td className="text-white text-lg font-inriaSans">
         <div className="flex items-center gap-4">
-          <Image src={`/coins/${slug}.png`} alt={name} width={32} height={32} />
-          <span>{name}</span>
+          <Image
+            src={`/coins/${coin.slug}.png`}
+            alt={coin.name}
+            width={32}
+            height={32}
+          />
+          <span>{coin.name}</span>
         </div>
       </td>
-      <td className="text-white text-lg font-inriaSans">${price}</td>
-      <td
-        className={`text-lg font-inriaSans ${
-          change.startsWith("-") ? "text-red-400" : "text-emerald-400"
-        }`}
-      >
-        {change}
+      <td className="text-white text-lg font-inriaSans">
+        ${coin.price.toFixed(2)}
       </td>
       <td
         className={`text-lg font-inriaSans ${
-          percentageChange.startsWith("-") ? "text-red-400" : "text-emerald-400"
+          coin.change.startsWith("-") ? "text-red-400" : "text-emerald-400"
         }`}
       >
-        {percentageChange}
+        {coin.change}
+      </td>
+      <td
+        className={`text-lg font-inriaSans ${
+          coin.percentageChange.startsWith("-")
+            ? "text-red-400"
+            : "text-emerald-400"
+        }`}
+      >
+        {coin.percentageChange}
       </td>
       <td className="py-4 text-right">
         <PrimaryButton
           small
           text="View Details"
-          onClick={() => router.push(`/coin/${slug}`)}
+          onClick={() => router.push(`/coin/${coin.slug}`)}
         />
       </td>
     </tr>
