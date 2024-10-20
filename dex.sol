@@ -33,7 +33,7 @@ contract dex {
     }
 
     // Function to swap TokenA for TokenB at a 1:1 ratio
-    function swapToken(address input, uint256 amount) public returns (uint256) {
+    function swapToken(address input, uint256 amount, uint256 poolFee, address inputAddress, uint256 no1, uint256 no2) public returns (uint256) {
         require(amount > 0, "Amount must be greater than zero");
         require(input == address(tokenA) || input == address(tokenB), "Invalid token address");
 
