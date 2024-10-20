@@ -3,6 +3,14 @@ pragma solidity ^0.8.0;
 import "./PriceChecker.sol";
 
 
+//1. deploy two token contracts
+//2. deploy dex contract
+//3. deploy orderbook contract
+//4. mint coins for dex on both token contracts to provide liquidity
+//5. mint coins for user for trading
+
+//For each transaction, ensure  Price Checker can spend user's allowance
+
 import "hardhat/console.sol";
 
 contract Orderbook {
