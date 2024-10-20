@@ -43,6 +43,12 @@ Our project is built upon a solid foundation, focusing on the following key comp
 2. **Adaptive DEX Functionality**: Developing a system that intelligently splits swap orders, optimizing execution and minimizing losses.
 3. **User Interface**: Creating an intuitive interface that allows users to easily manage their trades and place limit orders on the SKALE network.
 
+## Flow
+1. CryptoBASO splits swaps across multiple transactions to prevent front running.
+2. We deployed our smart contract on Flow and used its features.
+3. Hardwokring Purdue udergraduate CS majors- Vincent (@vpalmerio (twitter)), Pranav (_pranav_doshi (instagram)), Mugdha (mugdha_____26(instagram)), Shivam (_shivam_rastogi_(instagram))
+
+
 ## Challenges We Ran Into
 
 - Ensuring that our split transaction mechanism functioned flawlessly across various DEXs.
