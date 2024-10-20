@@ -3,14 +3,6 @@ pragma solidity ^0.8.0;
 import "./PriceChecker.sol";
 
 
-//1. deploy two token contracts
-//2. deploy dex contract
-//3. deploy orderbook contract
-//4. mint coins for dex on both token contracts to provide liquidity
-//5. mint coins for user for trading
-
-//For each transaction, ensure  Price Checker can spend user's allowance
-
 import "hardhat/console.sol";
 
 contract Orderbook {
@@ -22,7 +14,9 @@ contract Orderbook {
 
     mapping (address => orderList) public userOrders;
     address[] public users;
-    uint256 amountOfUsers;
+    uint256 public amountOfUsers;
+    //you call it like function
+    //Server is done!!!!!
 
     function createOrder(uint256 amountIn, 
             address dexAddr, uint256 split) public returns (address) {
