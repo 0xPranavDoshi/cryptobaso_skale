@@ -19,6 +19,7 @@ const config: Config = {
         background: "#191B1C",
         light: "#ACACAC",
         navbar: "#252728",
+        primary: "#8BC8C7FF",
       },
       backgroundImage: {
         "button-primary": "linear-gradient(90deg, #63B9B8 0%, #4D9392 100%)",

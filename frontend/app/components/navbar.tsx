@@ -3,11 +3,76 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { SecondaryButton } from "../ui/button";
 import { motion } from "framer-motion";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
+import { ethers } from "ethers";
+import { BrowserProvider, parseUnits } from "ethers";
+
+interface AccountType {
+  address?: string;
+  balance?: string;
+  chainId?: string;
+  network?: string;
+}
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const pathname = usePathname();
+  const [accountData, setAccountData] = useState<AccountType | null>(null);
+
+  useEffect(() => {
+    const isConnected = async () => {
+      const ethereum = window.ethereum;
+      const accounts = await ethereum.request({ method: "eth_accounts" });
+      if (accounts.length) {
+        console.log(`You're connected to: ${accounts[0]}`);
+        const address = accounts[0];
+        const provider = new ethers.BrowserProvider(ethereum);
+        const balance = await provider.getBalance(address);
+        const network = await provider.getNetwork();
+
+        setAccountData({
+          address,
+          balance: ethers.formatEther(balance),
+          // The chainId property is a bigint, change to a string
+          chainId: network.chainId.toString(),
+          network: network.name,
+        });
+      } else {
+        console.log("Metamask is not connected");
+      }
+    };
+
+    isConnected();
+  }, []);
+
+  const _connectToMetaMask = useCallback(async () => {
+    const ethereum = window.ethereum;
+    // Check if MetaMask is installed
+    if (typeof ethereum !== "undefined") {
+      try {
+        // Request access to the user's MetaMask accounts
+        const accounts = await ethereum.request({
+          method: "eth_requestAccounts",
+        });
+
+        const address = accounts[0];
+        const provider = new ethers.BrowserProvider(ethereum);
+        const balance = await provider.getBalance(address);
+        const network = await provider.getNetwork();
+
+        setAccountData({
+          address,
+          balance: ethers.formatEther(balance),
+          chainId: network.chainId.toString(),
+          network: network.name,
+        });
+      } catch (error: Error | any) {
+        alert(`Error connecting to MetaMask: ${error?.message ?? error}`);
+      }
+    } else {
+      alert("MetaMask not installed");
+    }
+  }, []);
 
   const handleScroll = () => {
     if (window.scrollY > 60) {
@@ -62,7 +127,18 @@ const Navbar = () => {
             About Us
           </Link>
         </div>
-        <SecondaryButton text="Connect Wallet" onClick={() => {}} />
+        {!accountData ? (
+          <SecondaryButton
+            text="Connect Wallet"
+            onClick={() => _connectToMetaMask()}
+          />
+        ) : (
+          <div className="flex items-center gap-2">
+            <p className="text-primary">
+              Wallet Connected: {accountData?.address?.substring(0, 5)}...!
+            </p>
+          </div>
+        )}
       </div>
     </motion.div>
   );
