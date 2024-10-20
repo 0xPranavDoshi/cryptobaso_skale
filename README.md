@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="[CrypTapLogoFinal.png](https://drive.google.com/file/d/1enT-PtFX2iyTnrUCrq0Oty-NsckLKDID/view?usp=drive_link)" alt="CryptoBASO Logo" width="200"/>
+<img src="CrypTapLogoFinal.png](https://drive.google.com/file/d/1enT-PtFX2iyTnrUCrq0Oty-NsckLKDID/view?usp=drive_link" alt="CryptoBASO Logo" width="200"/>
 
 #  CryptoBaso: Crypto Buying and Selling Orders 
 
@@ -28,9 +28,9 @@
 
 </div>
 
-# SKALE DEX: Revolutionizing Trading on the SKALE Network
+# CryotoBASO: Revolutionizing Trading on the SKALE Network
 
-SKALE DEX is a pioneering solution that leverages the power of the SKALE network to enhance trading efficiency and minimize losses from frontrunning, all while enjoying zero gas fees.
+CryotoBASO is a pioneering solution that leverages the power of the SKALE network to enhance trading efficiency and minimize losses from frontrunning, all while enjoying zero gas fees.
 
 ## 🛠 SKALE Network
 Experience unparalleled transaction capabilities with the SKALE network, enabling seamless and cost-effective trading.
