@@ -26,7 +26,7 @@ async function deploy(contractModule, parameters) {
 //4. mint coins for dex on both token contracts to provide liquidity
 //5. mint coins for user for trading
 
-async function main() {
+async function main() { //did you chatGPT??? Ask it if why your code my be incorrect
 
     const accounts = await ethers.getSigners();
     const deployer = accounts[0].address;

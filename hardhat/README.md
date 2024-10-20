@@ -1,13 +1,8 @@
-# Sample Hardhat Project
+# CryptoBASO - Crypto Buy and Sell Orders
 
-This project demonstrates a basic Hardhat use case. It comes with a sample contract, a test for that contract, and a Hardhat Ignition module that deploys that contract.
+Create a .env file and copy the line below, replacing `<private-key>` with your SKALE testnet private key:
+`SKALE_PRIVATE_KEY = "<private-key>"`
 
-Try running some of the following tasks:
+To run deploy the contracts and server, change your directory to the hardhat folder. If you want to deploy on local hardhat node, run `npx harhat node` and then `npx hardhat run scripts/server.js --network localhost`
 
-```shell
-npx hardhat help
-npx hardhat test
-REPORT_GAS=true npx hardhat test
-npx hardhat node
-npx hardhat ignition deploy ./ignition/modules/Lock.js
-```
+If you want to deploy on SKALE network, run `npx hardhat run scripts/server.js --network skale`
