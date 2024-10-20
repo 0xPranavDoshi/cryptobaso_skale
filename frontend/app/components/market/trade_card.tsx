@@ -4,6 +4,7 @@ import { SecondaryButton } from "@/app/ui/button";
 import { useState } from "react";
 import { ethers } from "ethers";
 import { CoinType } from "@/app/models/coin";
+import { BeatLoader } from "react-spinners";
 
 const ERC20_ABI = [
   // Read-Only Functions
@@ -18,10 +19,737 @@ const ERC20_ABI = [
   "event Transfer(address indexed from, address indexed to, uint amount)",
 ];
 
+const ABI = [
+  {
+    inputs: [],
+    name: "amountOfUsers",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "amountIn",
+        type: "uint256",
+      },
+      {
+        internalType: "address",
+        name: "dexAddr",
+        type: "address",
+      },
+      {
+        internalType: "uint256",
+        name: "split",
+        type: "uint256",
+      },
+    ],
+    name: "createOrder",
+    outputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "user",
+        type: "address",
+      },
+    ],
+    name: "getOrderList",
+    outputs: [
+      {
+        internalType: "address[]",
+        name: "",
+        type: "address[]",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
+    name: "userOrders",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "amountOfOrders",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    name: "users",
+    outputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+];
+
+const TOKEN_ABI = [
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "initialOwner",
+        type: "address",
+      },
+    ],
+    stateMutability: "nonpayable",
+    type: "constructor",
+  },
+  {
+    inputs: [],
+    name: "ECDSAInvalidSignature",
+    type: "error",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "length",
+        type: "uint256",
+      },
+    ],
+    name: "ECDSAInvalidSignatureLength",
+    type: "error",
+  },
+  {
+    inputs: [
+      {
+        internalType: "bytes32",
+        name: "s",
+        type: "bytes32",
+      },
+    ],
+    name: "ECDSAInvalidSignatureS",
+    type: "error",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "spender",
+        type: "address",
+      },
+      {
+        internalType: "uint256",
+        name: "allowance",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "needed",
+        type: "uint256",
+      },
+    ],
+    name: "ERC20InsufficientAllowance",
+    type: "error",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "sender",
+        type: "address",
+      },
+      {
+        internalType: "uint256",
+        name: "balance",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "needed",
+        type: "uint256",
+      },
+    ],
+    name: "ERC20InsufficientBalance",
+    type: "error",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "approver",
+        type: "address",
+      },
+    ],
+    name: "ERC20InvalidApprover",
+    type: "error",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "receiver",
+        type: "address",
+      },
+    ],
+    name: "ERC20InvalidReceiver",
+    type: "error",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "sender",
+        type: "address",
+      },
+    ],
+    name: "ERC20InvalidSender",
+    type: "error",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "spender",
+        type: "address",
+      },
+    ],
+    name: "ERC20InvalidSpender",
+    type: "error",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "deadline",
+        type: "uint256",
+      },
+    ],
+    name: "ERC2612ExpiredSignature",
+    type: "error",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "signer",
+        type: "address",
+      },
+      {
+        internalType: "address",
+        name: "owner",
+        type: "address",
+      },
+    ],
+    name: "ERC2612InvalidSigner",
+    type: "error",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "account",
+        type: "address",
+      },
+      {
+        internalType: "uint256",
+        name: "currentNonce",
+        type: "uint256",
+      },
+    ],
+    name: "InvalidAccountNonce",
+    type: "error",
+  },
+  {
+    inputs: [],
+    name: "InvalidShortString",
+    type: "error",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "owner",
+        type: "address",
+      },
+    ],
+    name: "OwnableInvalidOwner",
+    type: "error",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "account",
+        type: "address",
+      },
+    ],
+    name: "OwnableUnauthorizedAccount",
+    type: "error",
+  },
+  {
+    inputs: [
+      {
+        internalType: "string",
+        name: "str",
+        type: "string",
+      },
+    ],
+    name: "StringTooLong",
+    type: "error",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: "address",
+        name: "owner",
+        type: "address",
+      },
+      {
+        indexed: true,
+        internalType: "address",
+        name: "spender",
+        type: "address",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "value",
+        type: "uint256",
+      },
+    ],
+    name: "Approval",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [],
+    name: "EIP712DomainChanged",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: "address",
+        name: "previousOwner",
+        type: "address",
+      },
+      {
+        indexed: true,
+        internalType: "address",
+        name: "newOwner",
+        type: "address",
+      },
+    ],
+    name: "OwnershipTransferred",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: "address",
+        name: "from",
+        type: "address",
+      },
+      {
+        indexed: true,
+        internalType: "address",
+        name: "to",
+        type: "address",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "value",
+        type: "uint256",
+      },
+    ],
+    name: "Transfer",
+    type: "event",
+  },
+  {
+    inputs: [],
+    name: "DOMAIN_SEPARATOR",
+    outputs: [
+      {
+        internalType: "bytes32",
+        name: "",
+        type: "bytes32",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "owner",
+        type: "address",
+      },
+      {
+        internalType: "address",
+        name: "spender",
+        type: "address",
+      },
+    ],
+    name: "allowance",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "spender",
+        type: "address",
+      },
+      {
+        internalType: "uint256",
+        name: "value",
+        type: "uint256",
+      },
+    ],
+    name: "approve",
+    outputs: [
+      {
+        internalType: "bool",
+        name: "",
+        type: "bool",
+      },
+    ],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "account",
+        type: "address",
+      },
+    ],
+    name: "balanceOf",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "decimals",
+    outputs: [
+      {
+        internalType: "uint8",
+        name: "",
+        type: "uint8",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "eip712Domain",
+    outputs: [
+      {
+        internalType: "bytes1",
+        name: "fields",
+        type: "bytes1",
+      },
+      {
+        internalType: "string",
+        name: "name",
+        type: "string",
+      },
+      {
+        internalType: "string",
+        name: "version",
+        type: "string",
+      },
+      {
+        internalType: "uint256",
+        name: "chainId",
+        type: "uint256",
+      },
+      {
+        internalType: "address",
+        name: "verifyingContract",
+        type: "address",
+      },
+      {
+        internalType: "bytes32",
+        name: "salt",
+        type: "bytes32",
+      },
+      {
+        internalType: "uint256[]",
+        name: "extensions",
+        type: "uint256[]",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "to",
+        type: "address",
+      },
+      {
+        internalType: "uint256",
+        name: "amount",
+        type: "uint256",
+      },
+    ],
+    name: "mint",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "name",
+    outputs: [
+      {
+        internalType: "string",
+        name: "",
+        type: "string",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "owner",
+        type: "address",
+      },
+    ],
+    name: "nonces",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "owner",
+    outputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "owner",
+        type: "address",
+      },
+      {
+        internalType: "address",
+        name: "spender",
+        type: "address",
+      },
+      {
+        internalType: "uint256",
+        name: "value",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "deadline",
+        type: "uint256",
+      },
+      {
+        internalType: "uint8",
+        name: "v",
+        type: "uint8",
+      },
+      {
+        internalType: "bytes32",
+        name: "r",
+        type: "bytes32",
+      },
+      {
+        internalType: "bytes32",
+        name: "s",
+        type: "bytes32",
+      },
+    ],
+    name: "permit",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "renounceOwnership",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "symbol",
+    outputs: [
+      {
+        internalType: "string",
+        name: "",
+        type: "string",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "totalSupply",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "to",
+        type: "address",
+      },
+      {
+        internalType: "uint256",
+        name: "value",
+        type: "uint256",
+      },
+    ],
+    name: "transfer",
+    outputs: [
+      {
+        internalType: "bool",
+        name: "",
+        type: "bool",
+      },
+    ],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "from",
+        type: "address",
+      },
+      {
+        internalType: "address",
+        name: "to",
+        type: "address",
+      },
+      {
+        internalType: "uint256",
+        name: "value",
+        type: "uint256",
+      },
+    ],
+    name: "transferFrom",
+    outputs: [
+      {
+        internalType: "bool",
+        name: "",
+        type: "bool",
+      },
+    ],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "newOwner",
+        type: "address",
+      },
+    ],
+    name: "transferOwnership",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+];
+
 const TradeCard = ({ coin }: { coin: CoinType }) => {
   const [tradeType, setTradeType] = useState<"buy" | "sell">("buy");
   const [amount, setAmount] = useState<number>(0);
   const [splits, setSplits] = useState<number>(1);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const transferFunds = async ({
     amount,
@@ -30,6 +758,7 @@ const TradeCard = ({ coin }: { coin: CoinType }) => {
     amount: number;
     coin: CoinType;
   }) => {
+    setLoading(true);
     try {
       // Check if window.ethereum is available
       if (typeof window.ethereum !== "undefined") {
@@ -53,65 +782,65 @@ const TradeCard = ({ coin }: { coin: CoinType }) => {
         // For example: const tx = await signer.sendTransaction({...});
 
         // Check if the wallet is connected to Europa DeFi Hub SKALE network
-        const chainId = await window.ethereum.request({
-          method: "eth_chainId",
-        });
-        const europaDeFiHubChainId = "0x561bf78b"; // Chain ID for Europa DeFi Hub
+        // const chainId = await window.ethereum.request({
+        //   method: "eth_chainId",
+        // });
+        // const europaDeFiHubChainId = "0x561bf78b"; // Chain ID for Europa DeFi Hub
 
-        if (chainId !== europaDeFiHubChainId) {
-          try {
-            // Request to switch to Europa DeFi Hub network
-            await window.ethereum.request({
-              method: "wallet_switchEthereumChain",
-              params: [{ chainId: europaDeFiHubChainId }],
-            });
-            console.log("Switched to Europa DeFi Hub network successfully");
-          } catch (switchError: any) {
-            // This error code indicates that the chain has not been added to MetaMask
-            if (switchError.code === 4902) {
-              try {
-                await window.ethereum.request({
-                  method: "wallet_addEthereumChain",
-                  params: [
-                    {
-                      chainId: europaDeFiHubChainId,
-                      chainName: "Europa DeFi & Liquidity Hub",
-                      nativeCurrency: {
-                        name: "sFUEL",
-                        symbol: "sFUEL",
-                        decimals: 18,
-                      },
-                      rpcUrls: [
-                        "https://testnet.skalenodes.com/v1/juicy-low-small-testnet",
-                      ],
-                      blockExplorerUrls: [
-                        "https://juicy-low-small-testnet.explorer.testnet.skalenodes.com",
-                      ],
-                    },
-                  ],
-                });
-                console.log("Europa DeFi Hub network added successfully");
-              } catch (addError) {
-                console.error(
-                  "Failed to add Europa DeFi Hub network:",
-                  addError
-                );
-              }
-            } else {
-              console.error(
-                "Failed to switch to Europa DeFi Hub network:",
-                switchError
-              );
-            }
-          }
-        } else {
-          console.log("Already connected to Europa DeFi Hub network");
-        }
+        // if (chainId !== europaDeFiHubChainId) {
+        //   try {
+        //     // Request to switch to Europa DeFi Hub network
+        //     await window.ethereum.request({
+        //       method: "wallet_switchEthereumChain",
+        //       params: [{ chainId: europaDeFiHubChainId }],
+        //     });
+        //     console.log("Switched to Europa DeFi Hub network successfully");
+        //   } catch (switchError: any) {
+        //     // This error code indicates that the chain has not been added to MetaMask
+        //     if (switchError.code === 4902) {
+        //       try {
+        //         await window.ethereum.request({
+        //           method: "wallet_addEthereumChain",
+        //           params: [
+        //             {
+        //               chainId: europaDeFiHubChainId,
+        //               chainName: "Europa DeFi & Liquidity Hub",
+        //               nativeCurrency: {
+        //                 name: "sFUEL",
+        //                 symbol: "sFUEL",
+        //                 decimals: 18,
+        //               },
+        //               rpcUrls: [
+        //                 "https://testnet.skalenodes.com/v1/juicy-low-small-testnet",
+        //               ],
+        //               blockExplorerUrls: [
+        //                 "https://juicy-low-small-testnet.explorer.testnet.skalenodes.com",
+        //               ],
+        //             },
+        //           ],
+        //         });
+        //         console.log("Europa DeFi Hub network added successfully");
+        //       } catch (addError) {
+        //         console.error(
+        //           "Failed to add Europa DeFi Hub network:",
+        //           addError
+        //         );
+        //       }
+        //     } else {
+        //       console.error(
+        //         "Failed to switch to Europa DeFi Hub network:",
+        //         switchError
+        //       );
+        //     }
+        //   }
+        // } else {
+        //   console.log("Already connected to Europa DeFi Hub network");
+        // }
 
         // TODO: Implement the transfer funds logic
         // Transfer funds to smart contract address
         const smartContractAddress =
-          "0xDfCcc9567378aBa81B74ece63ba9bAD017bAF65d";
+          "0xB2b39e11Eb27994eB1E8b5e19Ea3A6A1F7028835";
 
         // Create a contract instance for USDC
         const usdcContractAddress =
@@ -136,6 +865,41 @@ const TradeCard = ({ coin }: { coin: CoinType }) => {
         await tx.wait();
 
         console.log("Transfer successful:", tx.hash);
+
+        const orderbookAddress = "0x7eEd47faDc7d8D086443BD5e0F8eb02a83CD4890";
+        const orderbookContract = new ethers.Contract(
+          orderbookAddress,
+          ABI,
+          signer
+        );
+
+        const tokenContract = new ethers.Contract(
+          "0x26cF7F3B9299078706faE762974286CfA870A11e",
+          TOKEN_ABI,
+          signer
+        );
+
+        // Define parameters for createOrder
+        const amountIn = amountInWei;
+        const dexAddr = "0xB2b39e11Eb27994eB1E8b5e19Ea3A6A1F7028835";
+
+        const order = await orderbookContract.createOrder(
+          amountIn,
+          dexAddr,
+          splits
+        );
+
+        const receipt = await order.wait();
+
+        console.log("receipt", receipt);
+
+        let orders = await orderbookContract.getOrderList(account);
+
+        console.log("orders", orders);
+
+        await tokenContract.approve(orders[orders.length - 1], amountInWei);
+
+        setLoading(false);
       } else {
         console.error("Please install MetaMask!");
         return null;
@@ -143,6 +907,8 @@ const TradeCard = ({ coin }: { coin: CoinType }) => {
     } catch (error) {
       console.error("Error connecting to wallet:", error);
       return null;
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -176,7 +942,7 @@ const TradeCard = ({ coin }: { coin: CoinType }) => {
             <div className="flex items-center justify-between gap-2">
               <input
                 type="number"
-                className="w-full bg-white/[.02] border border-white/[.1] rounded-lg p-2 text-white font-inriaSans focus:outline-none focus:ring-2 focus:ring-[#63B9B8]"
+                className="z-20 w-full bg-white/[.02] border border-white/[.1] rounded-lg p-2 text-white font-inriaSans focus:outline-none focus:ring-2 focus:ring-[#63B9B8]"
                 value={amount}
                 onChange={(e) => setAmount(Number(e.target.value))}
               />
@@ -203,7 +969,7 @@ const TradeCard = ({ coin }: { coin: CoinType }) => {
               <input
                 type="number"
                 defaultValue={1}
-                className="w-full bg-white/[.02] border border-white/[.1] rounded-lg p-2 text-white font-inriaSans focus:outline-none focus:ring-2 focus:ring-[#63B9B8]"
+                className="z-20 w-full bg-white/[.02] border border-white/[.1] rounded-lg p-2 text-white font-inriaSans focus:outline-none focus:ring-2 focus:ring-[#63B9B8]"
                 value={splits}
                 onChange={(e) => setSplits(Number(e.target.value))}
               />
@@ -211,11 +977,16 @@ const TradeCard = ({ coin }: { coin: CoinType }) => {
           </div>
         </div>
 
-        <SecondaryButton
-          text="Trade"
-          onClick={() => transferFunds({ amount, coin })}
-          fullWidth
-        />
+        <div className="h-10 w-full">
+          <SecondaryButton
+            text="Trade"
+            onClick={() => transferFunds({ amount, coin })}
+            fullWidth
+            fullHeight
+          >
+            {loading ? <BeatLoader size={10} /> : "Trade"}
+          </SecondaryButton>
+        </div>
       </div>
     </div>
   );
