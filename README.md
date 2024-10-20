@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="[https://drive.google.com/file/d/1enT-PtFX2iyTnrUCrq0Oty-NsckLKDID/view?usp=drive_link"] alt="CryptoBASO Logo" width="200"/>
+<img src="https://drive.google.com/file/d/1enT-PtFX2iyTnrUCrq0Oty-NsckLKDID/view?usp=sharing" alt="CryptoBASO Logo" width="200"/>
 
 #  CryptoBaso: Crypto Buying and Selling Orders 
 
