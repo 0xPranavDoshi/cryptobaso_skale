@@ -5,7 +5,7 @@ import { SecondaryButton } from "../ui/button";
 import { motion } from "framer-motion";
 import { useCallback, useEffect, useState } from "react";
 import { ethers } from "ethers";
-import { BrowserProvider, parseUnits } from "ethers";
+import Image from "next/image";
 
 interface AccountType {
   address?: string;
@@ -26,13 +26,13 @@ const Navbar = () => {
       if (accounts.length) {
         console.log(`You're connected to: ${accounts[0]}`);
         const address = accounts[0];
-        const provider = new ethers.BrowserProvider(ethereum);
+        const provider = new ethers.providers.Web3Provider(ethereum);
         const balance = await provider.getBalance(address);
         const network = await provider.getNetwork();
 
         setAccountData({
           address,
-          balance: ethers.formatEther(balance),
+          balance: (await provider.getBalance(address)).toString(),
           // The chainId property is a bigint, change to a string
           chainId: network.chainId.toString(),
           network: network.name,
@@ -56,13 +56,13 @@ const Navbar = () => {
         });
 
         const address = accounts[0];
-        const provider = new ethers.BrowserProvider(ethereum);
+        const provider = new ethers.providers.Web3Provider(ethereum);
         const balance = await provider.getBalance(address);
         const network = await provider.getNetwork();
 
         setAccountData({
           address,
-          balance: ethers.formatEther(balance),
+          balance: (await provider.getBalance(address)).toString(),
           chainId: network.chainId.toString(),
           network: network.name,
         });
@@ -109,19 +109,25 @@ const Navbar = () => {
         </Link>
         <div className="flex gap-8 items-center">
           <Link
-            className="text-light hover:text-white transition-colors font-robotoMono no-underline"
+            className={`${
+              pathname === "/market" ? "text-white" : "text-light"
+            } hover:text-white transition-colors font-robotoMono no-underline`}
             href="/market"
           >
             Markets
           </Link>
           <Link
-            className="text-light hover:text-white transition-colors font-robotoMono no-underline"
+            className={`${
+              pathname === "/portfolio" ? "text-white" : "text-light"
+            } hover:text-white transition-colors font-robotoMono no-underline`}
             href="/portfolio"
           >
             Portfolio
           </Link>
           <Link
-            className="text-light hover:text-white transition-colors font-robotoMono no-underline"
+            className={`${
+              pathname === "/about" ? "text-white" : "text-light"
+            } hover:text-white transition-colors font-robotoMono no-underline`}
             href="/about"
           >
             About Us
@@ -133,9 +139,15 @@ const Navbar = () => {
             onClick={() => _connectToMetaMask()}
           />
         ) : (
-          <div className="flex items-center gap-2">
-            <p className="text-primary">
-              Wallet Connected: {accountData?.address?.substring(0, 5)}...!
+          <div className="flex gap-4 items-center justify-center px-4 py-2 rounded-lg bg-white/[.02] border border-white/[.1]">
+            <Image
+              src={`/metamask.png`}
+              alt="MetaMask"
+              width={28}
+              height={28}
+            />
+            <p className="text-white/[.8]">
+              {accountData?.address?.substring(0, 12)}...
             </p>
           </div>
         )}

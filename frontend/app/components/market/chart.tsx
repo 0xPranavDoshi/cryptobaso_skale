@@ -31,7 +31,8 @@ const CoinChart = ({ coin }: { coin: CoinType }) => {
   useEffect(() => {
     const fetchCoinPrices = async () => {
       const coinPrice = CoinPrices[coin.symbol as keyof typeof CoinPrices];
-      if (coinPrice.length > 0) {
+      if (coinPrice === undefined) return;
+      if (coinPrice && coinPrice.length > 0) {
         console.log("coinPrice", coinPrice);
         const formattedData = coinPrice.map((item: any) => {
           const date = new Date(item.time_period_start);
@@ -44,46 +45,46 @@ const CoinChart = ({ coin }: { coin: CoinType }) => {
           };
         });
         setCoinPrices(formattedData);
-        return;
+      } else {
+        console.log("no coin price data:", coinPrice);
+        const currentDate = new Date();
+        const isoDateEndString = currentDate.toISOString();
+        const isoDateStartString = new Date(
+          currentDate.getTime() - 7 * 24 * 60 * 60 * 1000
+        ).toISOString();
+
+        console.log("isoDateStartString", isoDateStartString);
+        console.log("isoDateEndString", isoDateEndString);
+
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/exchangerate/${coin.symbol}/USDC/history?period_id=1DAY&time_start=${isoDateStartString}&time_end=${isoDateEndString}&limit=7`,
+          {
+            headers: {
+              "X-CoinAPI-Key": process.env.NEXT_PUBLIC_API_KEY || "",
+              "Content-Type": "application/json",
+            },
+          }
+        );
+
+        const data = await response.json();
+
+        console.log("data", data);
+
+        const formattedData = data.map((item: any) => {
+          const date = new Date(item.time_period_start);
+          return {
+            name: date.toLocaleDateString("en-US", {
+              month: "short",
+              day: "numeric",
+            }),
+            rate: item.rate_open,
+          };
+        });
+
+        console.log("formattedData", formattedData);
+
+        setCoinPrices(formattedData);
       }
-
-      const currentDate = new Date();
-      const isoDateEndString = currentDate.toISOString();
-      const isoDateStartString = new Date(
-        currentDate.getTime() - 7 * 24 * 60 * 60 * 1000
-      ).toISOString();
-
-      console.log("isoDateStartString", isoDateStartString);
-      console.log("isoDateEndString", isoDateEndString);
-
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/exchangerate/${coin.symbol}/USDC/history?period_id=1DAY&time_start=${isoDateStartString}&time_end=${isoDateEndString}&limit=7`,
-        {
-          headers: {
-            "X-CoinAPI-Key": process.env.NEXT_PUBLIC_API_KEY || "",
-            "Content-Type": "application/json",
-          },
-        }
-      );
-
-      const data = await response.json();
-
-      console.log("data", data);
-
-      const formattedData = data.map((item: any) => {
-        const date = new Date(item.time_period_start);
-        return {
-          name: date.toLocaleDateString("en-US", {
-            month: "short",
-            day: "numeric",
-          }),
-          rate: item.rate_open,
-        };
-      });
-
-      console.log("formattedData", formattedData);
-
-      setCoinPrices(formattedData);
     };
 
     fetchCoinPrices();
