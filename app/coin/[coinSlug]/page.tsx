@@ -6,8 +6,12 @@ import { IoIosArrowBack } from "react-icons/io";
 import Image from "next/image";
 import TradeCard from "@/app/components/market/trade_card";
 import { useRouter } from "next/navigation";
+import { COINS } from "@/app/data/coin_data";
+import { CoinType } from "@/app/models/coin";
 
 const CoinPage = ({ params }: { params: { coinSlug: string } }) => {
+  const coin: CoinType = COINS.find((coin) => coin.slug === params.coinSlug);
+
   const router = useRouter();
   return (
     <div className="w-screen bg-background">
@@ -28,13 +32,15 @@ const CoinPage = ({ params }: { params: { coinSlug: string } }) => {
 
           <div className="flex gap-4 my-8">
             <Image
-              src="/coins/ethereum.png"
-              alt="eth"
+              src={`/coins/${coin?.slug}.png`}
+              alt={coin?.name}
               width={32}
               height={32}
               className="rounded-full"
             />
-            <h1 className="text-2xl font-semibold font-robotoMono">Ethereum</h1>
+            <h1 className="text-2xl font-semibold font-robotoMono">
+              {coin?.name}
+            </h1>
           </div>
 
           <div className="flex gap-4">

@@ -10,7 +10,7 @@ const Markets = () => {
 
       <div className="pt-[calc(80px)] w-full h-full flex items-center justify-center">
         <div className="w-3/4 h-full flex flex-col">
-          <h1 className="text-white text-3xl my-12 font-robotoMono">Markets</h1>
+          <h1 className="text-white text-3xl my-12 font-robotoMono">Market</h1>
 
           <table className="table-auto">
             <thead>

@@ -1,4 +1,4 @@
-import { EthPrices } from "@/app/data/coin_data";
+import { CoinPrices } from "@/app/data/price_data";
 import {
   LineChart,
   Line,
@@ -8,9 +8,48 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
+import { CoinType } from "@/app/models/coin";
+import { useEffect, useState } from "react";
 
-const CoinChart = () => {
-  const data = EthPrices.map((price) => {
+const CoinChart = ({ coin }: { coin: CoinType }) => {
+  const [coinPrices, setCoinPrices] = useState<any[]>([]);
+
+  useEffect(() => {
+    const getCoinPrices = async () => {
+      if (coinPrices.length > 0) return;
+
+      const coinPrice = CoinPrices[coin.symbol as keyof typeof CoinPrices];
+      if (coinPrice) {
+        setCoinPrices(coinPrice);
+        return;
+      }
+
+      const currentDate = new Date();
+      const isoDateEndString = currentDate.toISOString();
+      const isoDateStartString = new Date(
+        currentDate.getTime() - 7 * 24 * 60 * 60 * 1000
+      ).toISOString();
+
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/exchangerate/${coin.symbol}/USDC/history?period_id=7DAY&time_start=${isoDateStartString}&time_end=${isoDateEndString}&limit=7`,
+        {
+          headers: {
+            "X-CoinAPI-Key": process.env.NEXT_PUBLIC_API_KEY || "",
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      const data = await response.json();
+
+      console.log("data", data);
+      setCoinPrices(data);
+    };
+
+    getCoinPrices();
+  }, [coin, coinPrices.length]);
+
+  const data = coinPrices.map((price) => {
     const date = new Date(price.time_period_start);
 
     return {

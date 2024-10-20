@@ -14,7 +14,7 @@ const MainContent = () => {
             Buy & Sell Crypto <p className="pt-2">on Your Terms!</p>
           </h1>
           <PrimaryButton
-            text="Explore Markets"
+            text="Explore Market"
             onClick={() => router.push("/market")}
           />
         </div>
