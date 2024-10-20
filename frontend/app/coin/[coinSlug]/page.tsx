@@ -4,7 +4,6 @@ import CoinChart from "@/app/components/market/chart";
 import Navbar from "@/app/components/navbar";
 import Image from "next/image";
 import TradeCard from "@/app/components/market/trade_card";
-import { COINS } from "@/app/data/coin_data";
 import { CoinType } from "@/app/models/coin";
 import { BackButton } from "@/app/ui/back_button";
 import { useEffect, useState } from "react";
