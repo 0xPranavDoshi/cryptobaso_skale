@@ -1,4 +1,7 @@
+"use client";
+
 import { CoinPrices } from "@/app/data/price_data";
+import { useEffect, useState } from "react";
 import {
   LineChart,
   Line,
@@ -9,18 +12,38 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import { CoinType } from "@/app/models/coin";
-import { useEffect, useState } from "react";
 
 const CoinChart = ({ coin }: { coin: CoinType }) => {
   const [coinPrices, setCoinPrices] = useState<any[]>([]);
+  const nearestValue = (() => {
+    switch (coin.symbol) {
+      case "SKL":
+        return 0.01;
+      case "USDT":
+        return 0.001;
+      case "ETH":
+        return 50;
+      default:
+        return 1;
+    }
+  })();
 
   useEffect(() => {
-    const getCoinPrices = async () => {
-      if (coinPrices.length > 0) return;
-
+    const fetchCoinPrices = async () => {
       const coinPrice = CoinPrices[coin.symbol as keyof typeof CoinPrices];
-      if (coinPrice) {
-        setCoinPrices(coinPrice);
+      if (coinPrice.length > 0) {
+        console.log("coinPrice", coinPrice);
+        const formattedData = coinPrice.map((item: any) => {
+          const date = new Date(item.time_period_start);
+          return {
+            name: date.toLocaleDateString("en-US", {
+              month: "short",
+              day: "numeric",
+            }),
+            rate: item.rate_open,
+          };
+        });
+        setCoinPrices(formattedData);
         return;
       }
 
@@ -30,8 +53,11 @@ const CoinChart = ({ coin }: { coin: CoinType }) => {
         currentDate.getTime() - 7 * 24 * 60 * 60 * 1000
       ).toISOString();
 
+      console.log("isoDateStartString", isoDateStartString);
+      console.log("isoDateEndString", isoDateEndString);
+
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/exchangerate/${coin.symbol}/USDC/history?period_id=7DAY&time_start=${isoDateStartString}&time_end=${isoDateEndString}&limit=7`,
+        `${process.env.NEXT_PUBLIC_API_URL}/exchangerate/${coin.symbol}/USDC/history?period_id=1DAY&time_start=${isoDateStartString}&time_end=${isoDateEndString}&limit=7`,
         {
           headers: {
             "X-CoinAPI-Key": process.env.NEXT_PUBLIC_API_KEY || "",
@@ -43,23 +69,25 @@ const CoinChart = ({ coin }: { coin: CoinType }) => {
       const data = await response.json();
 
       console.log("data", data);
-      setCoinPrices(data);
+
+      const formattedData = data.map((item: any) => {
+        const date = new Date(item.time_period_start);
+        return {
+          name: date.toLocaleDateString("en-US", {
+            month: "short",
+            day: "numeric",
+          }),
+          rate: item.rate_open,
+        };
+      });
+
+      console.log("formattedData", formattedData);
+
+      setCoinPrices(formattedData);
     };
 
-    getCoinPrices();
-  }, [coin, coinPrices.length]);
-
-  const data = coinPrices.map((price) => {
-    const date = new Date(price.time_period_start);
-
-    return {
-      name: date.toLocaleDateString("en-US", {
-        month: "short",
-        day: "numeric",
-      }),
-      rate: price.rate_open.toFixed(0),
-    };
-  });
+    fetchCoinPrices();
+  }, [coin.symbol]);
 
   return (
     <div className="w-2/3 h-[30rem] -ml-8">
@@ -67,7 +95,7 @@ const CoinChart = ({ coin }: { coin: CoinType }) => {
         <LineChart
           width={500}
           height={300}
-          data={data}
+          data={coinPrices}
           margin={{
             top: 5,
             right: 30,
@@ -79,8 +107,10 @@ const CoinChart = ({ coin }: { coin: CoinType }) => {
           <XAxis dataKey="name" stroke="#B9B9B9FF" strokeWidth={1} />
           <YAxis
             domain={[
-              (dataMin: number) => Math.floor(dataMin / 50) * 50,
-              (dataMax: number) => Math.ceil(dataMax / 50) * 50,
+              (dataMin: number) =>
+                Math.floor(dataMin / nearestValue) * nearestValue,
+              (dataMax: number) =>
+                Math.ceil(dataMax / nearestValue) * nearestValue,
             ]}
             tickFormatter={(value) => `$${value}`}
             stroke="#B9B9B9FF"

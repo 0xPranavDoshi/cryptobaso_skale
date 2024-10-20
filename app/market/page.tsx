@@ -34,13 +34,15 @@ const Markets = () => {
             </thead>
             <tbody>
               <Coin
-                slug="bitcoin"
-                name="Bitcoin"
+                symbol="SKL"
+                slug="skale"
+                name="Skale"
                 price={10000}
                 change="-$45"
                 percentageChange="-6.24%"
               />
               <Coin
+                symbol="ETH"
                 slug="ethereum"
                 name="Ethereum"
                 price={10000}
@@ -48,13 +50,7 @@ const Markets = () => {
                 percentageChange="+10.12%"
               />
               <Coin
-                slug="solana"
-                name="Solana"
-                price={10000}
-                change="+$100"
-                percentageChange="+10.12%"
-              />
-              <Coin
+                symbol="USDT"
                 slug="tether"
                 name="Tether"
                 price={10000}
