@@ -2,7 +2,7 @@
 pragma solidity ^0.8;
 pragma abicoder v2;
 
-import 'https://github.com/cryptobaso/cryptobaso_skale/blob/main/dex.sol';
+import 'dex.sol';
 import '@uniswap/v3-periphery/contracts/libraries/TransferHelper.sol';
 
 import "hardhat/console.sol";
