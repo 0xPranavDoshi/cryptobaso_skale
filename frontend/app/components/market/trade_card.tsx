@@ -6,6 +6,8 @@ import { ethers } from "ethers";
 import { CoinType } from "@/app/models/coin";
 import { BeatLoader } from "react-spinners";
 
+declare var window: any;
+
 const ERC20_ABI = [
   // Read-Only Functions
   "function balanceOf(address owner) view returns (uint256)",

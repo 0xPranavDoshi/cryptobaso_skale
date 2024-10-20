@@ -7,6 +7,8 @@ import { useCallback, useEffect, useState } from "react";
 import { ethers } from "ethers";
 import Image from "next/image";
 
+declare var window: any;
+
 interface AccountType {
   address?: string;
   balance?: string;
