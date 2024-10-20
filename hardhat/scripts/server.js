@@ -19,6 +19,12 @@ async function deploy(contractModule, parameters) {
     return contract;
 }
 
+//you are on the wrong network and are accessing contract on wrong network
+
+
+//it is running test order
+//i forgot to print the address of all deployed contracts for you to use
+//lemme do that
 
 //1. deploy two token contracts
 //2. deploy dex contract
@@ -42,10 +48,12 @@ async function main() { //did you chatGPT??? Ask it if why your code my be incor
     console.log(token2)
     const token1Addr = await token1.getAddress();
     const token2Addr = await token2.getAddress();
-
+    console.log("Token1 address: ", token1Addr);
+    console.log("Token2 address: ", token2Addr);
     
     const { dex } = await deploy(dexModule, { parameters: { dex: { token1Addr, token2Addr} }})
     const dexAddr = await dex.getAddress();
+    console.log("Dex address: ", dexAddr);
 
     await token1.mint(dexAddr, 1000000);
     await token2.mint(dexAddr, 1000000);
@@ -55,6 +63,7 @@ async function main() { //did you chatGPT??? Ask it if why your code my be incor
 
     const { orderbook } = await deploy(orderbookModule)
     const orderbookAddr = await orderbook.getAddress();
+    console.log("Orderbook address: ", orderbookAddr);
      // get contract that contains addresses of all open order contracts
     //const orderbookContract = await ethers.getContractAt(orderbookABI, orderbookAddr);
 
@@ -65,6 +74,7 @@ async function main() { //did you chatGPT??? Ask it if why your code my be incor
 
 
     let orderpricechecker = await ethers.getContractAt(PriceCheckerABI, orders[0]);
+    console.log("order price checker", orderpricechecker)
     await token1.approve(orders[0], 100);
     
     //await orderpricecheker.swapExactOutputSingle();
