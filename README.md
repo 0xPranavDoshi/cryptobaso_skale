@@ -6,7 +6,6 @@
 
 **Redefine Your Trading Strategy: Combat Frontrunning with Our Game-Changing DEX Solution! Effortlessly Split Swap Orders Across Multiple Transactions on the SKALE Network—Experience Zero Gas Fees, Enhanced Precision, and Unmatched Control Over Your Trades!**
 
-[![Live Demo](https://img.shields.io/badge/Live-Demo-brightgreen)](https://ethdenver-smoky.vercel.app/)
 [![Build Status](https://img.shields.io/badge/build-passing-brightgreen.svg)]()
 [![Coverage Status](https://img.shields.io/badge/coverage-100%25-brightgreen.svg)]()
 
