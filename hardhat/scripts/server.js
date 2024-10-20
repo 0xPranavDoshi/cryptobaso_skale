@@ -45,7 +45,8 @@ async function main() { //did you chatGPT??? Ask it if why your code my be incor
     
     token2 = token.token;
     
-    console.log(token2)
+//it takes time to deploy...its deploying
+
     const token1Addr = await token1.getAddress();
     const token2Addr = await token2.getAddress();
     console.log("Token1 address: ", token1Addr);
@@ -74,7 +75,6 @@ async function main() { //did you chatGPT??? Ask it if why your code my be incor
 
 
     let orderpricechecker = await ethers.getContractAt(PriceCheckerABI, orders[0]);
-    console.log("order price checker", orderpricechecker)
     await token1.approve(orders[0], 100);
     
     //await orderpricecheker.swapExactOutputSingle();
